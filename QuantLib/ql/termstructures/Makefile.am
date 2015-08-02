@@ -9,6 +9,7 @@ this_include_HEADERS = \
 	bootstraperror.hpp \
 	bootstraphelper.hpp \
 	defaulttermstructure.hpp \
+	forwardratecurve.hpp \
 	inflationtermstructure.hpp \
 	interpolatedcurve.hpp \
 	iterativebootstrap.hpp \
@@ -18,6 +19,7 @@ this_include_HEADERS = \
 
 libTermStructures_la_SOURCES = \
 	defaulttermstructure.cpp \
+	forwardratecurve.cpp \
 	inflationtermstructure.cpp \
 	voltermstructure.cpp \
 	yieldtermstructure.cpp
