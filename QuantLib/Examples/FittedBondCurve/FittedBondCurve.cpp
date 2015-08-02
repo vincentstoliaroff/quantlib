@@ -136,7 +136,7 @@ int main(int, char* []) {
         cout << "Calculating fit for 15 bonds....." << endl << endl;
 
         std::vector<boost::shared_ptr<BondHelper> > instrumentsA;
-        std::vector<boost::shared_ptr<RateHelper> > instrumentsB;
+        // std::vector<boost::shared_ptr<RateHelper> > instrumentsB;
 
         for (Size j=0; j<LENGTH(lengths); j++) {
 
@@ -156,7 +156,7 @@ int main(int, char* []) {
                                              convention,
                                              redemption));
 
-            boost::shared_ptr<RateHelper> helperB(
+            /*boost::shared_ptr<RateHelper> helperB(
                      new FixedRateBondHelper(quoteHandle[j],
                                              bondSettlementDays,
                                              100.0,
@@ -164,9 +164,9 @@ int main(int, char* []) {
                                              std::vector<Rate>(1, coupons[j]),
                                              dc,
                                              convention,
-                                             redemption));
+                                             redemption));*/
             instrumentsA.push_back(helperA);
-            instrumentsB.push_back(helperB);
+            //instrumentsB.push_back(helperB);
         }
 
 
@@ -174,11 +174,11 @@ int main(int, char* []) {
         Real tolerance = 1.0e-10;
         Size max = 5000;
 
-        boost::shared_ptr<YieldTermStructure> ts0 (
+        /*boost::shared_ptr<YieldTermStructure> ts0 (
               new PiecewiseYieldCurve<Discount,LogLinear>(curveSettlementDays,
                                                           calendar,
                                                           instrumentsB,
-                                                          dc));
+                                                          dc));*/
 
         ExponentialSplinesFitting exponentialSplines(constrainAtZero);
 
@@ -297,8 +297,8 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*coupons[i] << " | "
                  // piecewise bootstrap
-                 << setw(6) << fixed << setprecision(3)
-                 << 100.*parRate(*ts0,keyDates,dc) << " | "
+                 // << setw(6) << fixed << setprecision(3)
+                 // << 100.*parRate(*ts0,keyDates,dc) << " | "
                  // exponential splines
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts1,keyDates,dc) << " | "
@@ -374,8 +374,8 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*coupons[i] << " | "
                  // piecewise bootstrap
-                 << setw(6) << fixed << setprecision(3)
-                 << 100.*parRate(*ts0,keyDates,dc) << " | "
+                 // << setw(6) << fixed << setprecision(3)
+                 // << 100.*parRate(*ts0,keyDates,dc) << " | "
                  // exponential splines
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts1,keyDates,dc) << " | "
@@ -403,18 +403,18 @@ int main(int, char* []) {
 
         instrumentsA.erase(instrumentsA.begin(),
                            instrumentsA.begin()+1);
-        instrumentsB.erase(instrumentsB.begin(),
-                           instrumentsB.begin()+1);
+        // instrumentsB.erase(instrumentsB.begin(),
+        //                    instrumentsB.begin()+1);
 
         today = calendar.advance(origToday,24,Months,convention);
         Settings::instance().evaluationDate() = today;
         bondSettlementDate = calendar.advance(today, bondSettlementDays*Days);
 
-        boost::shared_ptr<YieldTermStructure> ts00 (
+        /*boost::shared_ptr<YieldTermStructure> ts00 (
               new PiecewiseYieldCurve<Discount,LogLinear>(curveSettlementDays,
                                                           calendar,
                                                           instrumentsB,
-                                                          dc));
+                                                          dc));*/
 
         boost::shared_ptr<FittedBondDiscountCurve> ts11 (
                   new FittedBondDiscountCurve(curveSettlementDays,
@@ -506,8 +506,8 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*coupons[i+1] << " | "
                  // piecewise bootstrap
-                 << setw(6) << fixed << setprecision(3)
-                 << 100.*parRate(*ts00,keyDates,dc) << " | "
+                 // << setw(6) << fixed << setprecision(3)
+                 // << 100.*parRate(*ts00,keyDates,dc) << " | "
                  // exponential splines
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts11,keyDates,dc) << " | "
@@ -584,8 +584,8 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*coupons[i+1] << " | "
                  // piecewise bootstrap
-                 << setw(6) << fixed << setprecision(3)
-                 << 100.*parRate(*ts00,keyDates,dc) << " | "
+                 // << setw(6) << fixed << setprecision(3)
+                 // << 100.*parRate(*ts00,keyDates,dc) << " | "
                  // exponential splines
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts11,keyDates,dc) << " | "

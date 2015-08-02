@@ -210,7 +210,7 @@ namespace {
         boost::shared_ptr<IborIndex> euribor6mEmpty(new Euribor(6 * Months));
 
         std::vector<boost::shared_ptr<Quote> > q6m;
-        std::vector<boost::shared_ptr<RateHelper> > r6m;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > r6m;
 
         double q6mh[] = { 0.0001,  0.0001,  0.0001,  0.0003,  0.00055, 0.0009,
                           0.0014,  0.0019,  0.0025,  0.0031,  0.00325, 0.00313,

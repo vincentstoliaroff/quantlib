@@ -107,9 +107,29 @@ namespace QuantLib {
                                    const Currency& curr,
                                    const Calendar& fixCal,
                                    const DayCounter& dc,
+                                   const Handle<ForwardRateCurve>& h)
+   : IborIndex(familyName, 1*Days, settlementDays, curr,
+               fixCal, Following, false, dc, h) {}
+
+    OvernightIndex::OvernightIndex(const std::string& familyName,
+                                   Natural settlementDays,
+                                   const Currency& curr,
+                                   const Calendar& fixCal,
+                                   const DayCounter& dc,
                                    const Handle<YieldTermStructure>& h)
    : IborIndex(familyName, 1*Days, settlementDays, curr,
                fixCal, Following, false, dc, h) {}
+
+    boost::shared_ptr<IborIndex> OvernightIndex::clone(
+                               const Handle<ForwardRateCurve>& h) const {
+        return boost::shared_ptr<IborIndex>(
+                                        new OvernightIndex(familyName(),
+                                                           fixingDays(),
+                                                           currency(),
+                                                           fixingCalendar(),
+                                                           dayCounter(),
+                                                           h));
+    }
 
     boost::shared_ptr<IborIndex> OvernightIndex::clone(
                                const Handle<YieldTermStructure>& h) const {

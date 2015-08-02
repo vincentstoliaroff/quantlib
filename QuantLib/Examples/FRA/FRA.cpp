@@ -129,27 +129,27 @@ int main(int, char* []) {
         BusinessDayConvention convention = euribor3m->businessDayConvention();
         bool endOfMonth = euribor3m->endOfMonth();
 
-        boost::shared_ptr<RateHelper> fra1x4(
+        boost::shared_ptr<FraRateHelper> fra1x4(
                            new FraRateHelper(h1x4, 1, 4,
                                              fixingDays, calendar, convention,
                                              endOfMonth, fraDayCounter));
 
-        boost::shared_ptr<RateHelper> fra2x5(
+        boost::shared_ptr<FraRateHelper> fra2x5(
                            new FraRateHelper(h2x5, 2, 5,
                                              fixingDays, calendar, convention,
                                              endOfMonth, fraDayCounter));
 
-        boost::shared_ptr<RateHelper> fra3x6(
+        boost::shared_ptr<FraRateHelper> fra3x6(
                            new FraRateHelper(h3x6, 3, 6,
                                              fixingDays, calendar, convention,
                                              endOfMonth, fraDayCounter));
 
-        boost::shared_ptr<RateHelper> fra6x9(
+        boost::shared_ptr<FraRateHelper> fra6x9(
                            new FraRateHelper(h6x9, 6, 9,
                                              fixingDays, calendar, convention,
                                              endOfMonth, fraDayCounter));
 
-        boost::shared_ptr<RateHelper> fra9x12(
+        boost::shared_ptr<FraRateHelper> fra9x12(
                            new FraRateHelper(h9x12, 9, 12,
                                              fixingDays, calendar, convention,
                                              endOfMonth, fraDayCounter));
@@ -167,7 +167,7 @@ int main(int, char* []) {
         double tolerance = 1.0e-15;
 
         // A FRA curve
-        std::vector<boost::shared_ptr<RateHelper> > fraInstruments;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > fraInstruments;
 
         fraInstruments.push_back(fra1x4);
         fraInstruments.push_back(fra2x5);

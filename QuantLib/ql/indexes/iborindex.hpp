@@ -106,9 +106,17 @@ namespace QuantLib {
                        const Currency& currency,
                        const Calendar& fixingCalendar,
                        const DayCounter& dayCounter,
-                       const Handle<YieldTermStructure>& h =
-                                    Handle<YieldTermStructure>());
+                       const Handle<ForwardRateCurve>& h =
+                                    Handle<ForwardRateCurve>());
+        OvernightIndex(const std::string& familyName,
+                       Natural settlementDays,
+                       const Currency& currency,
+                       const Calendar& fixingCalendar,
+                       const DayCounter& dayCounter,
+                       const Handle<YieldTermStructure>& h);
         //! returns a copy of itself linked to a different forwarding curve
+        boost::shared_ptr<IborIndex> clone(
+                                   const Handle<ForwardRateCurve>& h) const;
         boost::shared_ptr<IborIndex> clone(
                                    const Handle<YieldTermStructure>& h) const;
     };

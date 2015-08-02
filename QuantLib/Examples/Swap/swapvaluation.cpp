@@ -157,32 +157,32 @@ int main(int, char* []) {
         // deposits
         DayCounter depositDayCounter = Actual360();
 
-        boost::shared_ptr<RateHelper> d1w(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d1w(new DepositRateHelper(
             Handle<Quote>(d1wRate),
             1*Weeks, fixingDays,
             calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> d1m(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d1m(new DepositRateHelper(
             Handle<Quote>(d1mRate),
             1*Months, fixingDays,
             calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> d3m(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d3m(new DepositRateHelper(
             Handle<Quote>(d3mRate),
             3*Months, fixingDays,
             calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> d6m(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d6m(new DepositRateHelper(
             Handle<Quote>(d6mRate),
             6*Months, fixingDays,
             calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> d9m(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d9m(new DepositRateHelper(
             Handle<Quote>(d9mRate),
             9*Months, fixingDays,
             calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> d1y(new DepositRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > d1y(new DepositRateHelper(
             Handle<Quote>(d1yRate),
             1*Years, fixingDays,
             calendar, ModifiedFollowing,
@@ -190,15 +190,15 @@ int main(int, char* []) {
 
 
         // setup FRAs
-        boost::shared_ptr<RateHelper> fra3x6(new FraRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fra3x6(new FraRateHelper(
             Handle<Quote>(fra3x6Rate),
             3, 6, fixingDays, calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> fra6x9(new FraRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fra6x9(new FraRateHelper(
             Handle<Quote>(fra6x9Rate),
             6, 9, fixingDays, calendar, ModifiedFollowing,
             true, depositDayCounter));
-        boost::shared_ptr<RateHelper> fra6x12(new FraRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fra6x12(new FraRateHelper(
             Handle<Quote>(fra6x12Rate),
             6, 12, fixingDays, calendar, ModifiedFollowing,
             true, depositDayCounter));
@@ -208,51 +208,51 @@ int main(int, char* []) {
         // Rate convexityAdjustment = 0.0;
         Integer futMonths = 3;
         Date imm = IMM::nextDate(settlementDate);
-        boost::shared_ptr<RateHelper> fut1(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut1(new FuturesRateHelper(
             Handle<Quote>(fut1Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut2(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut2(new FuturesRateHelper(
             Handle<Quote>(fut2Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut3(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut3(new FuturesRateHelper(
             Handle<Quote>(fut3Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut4(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut4(new FuturesRateHelper(
             Handle<Quote>(fut4Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut5(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut5(new FuturesRateHelper(
             Handle<Quote>(fut5Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut6(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut6(new FuturesRateHelper(
             Handle<Quote>(fut6Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut7(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut7(new FuturesRateHelper(
             Handle<Quote>(fut7Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
         imm = IMM::nextDate(imm+1);
-        boost::shared_ptr<RateHelper> fut8(new FuturesRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > fut8(new FuturesRateHelper(
             Handle<Quote>(fut8Price),
-            imm,
+            2, imm,
             futMonths, calendar, ModifiedFollowing,
             true, depositDayCounter));
 
@@ -263,27 +263,27 @@ int main(int, char* []) {
         DayCounter swFixedLegDayCounter = Thirty360(Thirty360::European);
         boost::shared_ptr<IborIndex> swFloatingLegIndex(new Euribor6M);
 
-        boost::shared_ptr<RateHelper> s2y(new SwapRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > s2y(new SwapRateHelper(
             Handle<Quote>(s2yRate), 2*Years,
             calendar, swFixedLegFrequency,
             swFixedLegConvention, swFixedLegDayCounter,
             swFloatingLegIndex));
-        boost::shared_ptr<RateHelper> s3y(new SwapRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > s3y(new SwapRateHelper(
             Handle<Quote>(s3yRate), 3*Years,
             calendar, swFixedLegFrequency,
             swFixedLegConvention, swFixedLegDayCounter,
             swFloatingLegIndex));
-        boost::shared_ptr<RateHelper> s5y(new SwapRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > s5y(new SwapRateHelper(
             Handle<Quote>(s5yRate), 5*Years,
             calendar, swFixedLegFrequency,
             swFixedLegConvention, swFixedLegDayCounter,
             swFloatingLegIndex));
-        boost::shared_ptr<RateHelper> s10y(new SwapRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > s10y(new SwapRateHelper(
             Handle<Quote>(s10yRate), 10*Years,
             calendar, swFixedLegFrequency,
             swFixedLegConvention, swFixedLegDayCounter,
             swFloatingLegIndex));
-        boost::shared_ptr<RateHelper> s15y(new SwapRateHelper(
+        boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > s15y(new SwapRateHelper(
             Handle<Quote>(s15yRate), 15*Years,
             calendar, swFixedLegFrequency,
             swFixedLegConvention, swFixedLegDayCounter,
@@ -303,7 +303,7 @@ int main(int, char* []) {
         double tolerance = 1.0e-15;
 
         // A depo-swap curve
-        std::vector<boost::shared_ptr<RateHelper> > depoSwapInstruments;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > depoSwapInstruments;
         depoSwapInstruments.push_back(d1w);
         depoSwapInstruments.push_back(d1m);
         depoSwapInstruments.push_back(d3m);
@@ -323,7 +323,7 @@ int main(int, char* []) {
 
 
         // A depo-futures-swap curve
-        std::vector<boost::shared_ptr<RateHelper> > depoFutSwapInstruments;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > depoFutSwapInstruments;
         depoFutSwapInstruments.push_back(d1w);
         depoFutSwapInstruments.push_back(d1m);
         depoFutSwapInstruments.push_back(fut1);
@@ -346,7 +346,7 @@ int main(int, char* []) {
 
 
         // A depo-FRA-swap curve
-        std::vector<boost::shared_ptr<RateHelper> > depoFRASwapInstruments;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > depoFRASwapInstruments;
         depoFRASwapInstruments.push_back(d1w);
         depoFRASwapInstruments.push_back(d1m);
         depoFRASwapInstruments.push_back(d3m);

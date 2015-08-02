@@ -46,14 +46,14 @@ namespace QuantLib {
             typedef InterpolatedDiscountCurve<Interpolator> type;
         };
         // helper class
-        typedef BootstrapHelper<YieldTermStructure> helper;
+        typedef BootstrapHelper<ForwardRateCurve> helper;
 
         // start of curve data
-        static Date initialDate(const YieldTermStructure* c) {
+        static Date initialDate(const ForwardRateCurve* c) {
             return c->referenceDate();
         }
         // value at reference date
-        static Real initialValue(const YieldTermStructure*) {
+        static Real initialValue(const ForwardRateCurve*) {
             return 1.0;
         }
 
@@ -127,14 +127,14 @@ namespace QuantLib {
             typedef InterpolatedZeroCurve<Interpolator> type;
         };
         // helper class
-        typedef BootstrapHelper<YieldTermStructure> helper;
+        typedef BootstrapHelper<ForwardRateCurve> helper;
 
         // start of curve data
-        static Date initialDate(const YieldTermStructure* c) {
+        static Date initialDate(const ForwardRateCurve* c) {
             return c->referenceDate();
         }
         // dummy value at reference date
-        static Real initialValue(const YieldTermStructure*) {
+        static Real initialValue(const ForwardRateCurve*) {
             return detail::avgRate;
         }
 
@@ -220,14 +220,14 @@ namespace QuantLib {
             typedef InterpolatedForwardCurve<Interpolator> type;
         };
         // helper class
-        typedef BootstrapHelper<YieldTermStructure> helper;
+        typedef BootstrapHelper<ForwardRateCurve> helper;
 
         // start of curve data
-        static Date initialDate(const YieldTermStructure* c) {
+        static Date initialDate(const ForwardRateCurve* c) {
             return c->referenceDate();
         }
         // dummy value at reference date
-        static Real initialValue(const YieldTermStructure*) {
+        static Real initialValue(const ForwardRateCurve*) {
             return detail::avgRate;
         }
 

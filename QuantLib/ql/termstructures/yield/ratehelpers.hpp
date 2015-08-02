@@ -6,6 +6,7 @@
  Copyright (C) 2007, 2008, 2009, 2015 Ferdinando Ametrano
  Copyright (C) 2007, 2009 Roland Lichters
  Copyright (C) 2015 Maddalena Zanzi
+ Copyright (C) 2015 Riccardo Barone
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -40,14 +41,11 @@ namespace QuantLib {
     class SwapIndex;
     class Quote;
 
-    typedef BootstrapHelper<YieldTermStructure> RateHelper;
-    typedef RelativeDateBootstrapHelper<YieldTermStructure>
-                                                        RelativeDateRateHelper;
-
     //! Rate helper for bootstrapping over IborIndex futures prices
-    class FuturesRateHelper : public RateHelper {
+    class FuturesRateHelper : public BootstrapHelper<ForwardRateCurve> {
       public:
         FuturesRateHelper(const Handle<Quote>& price,
+                          Natural fixingDays,
                           const Date& iborStartDate,
                           Natural lengthInMonths,
                           const Calendar& calendar,
@@ -57,6 +55,7 @@ namespace QuantLib {
                           const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
                           Futures::Type type = Futures::IMM);
         FuturesRateHelper(Real price,
+                          Natural fixingDays,
                           const Date& iborStartDate,
                           Natural lengthInMonths,
                           const Calendar& calendar,
@@ -66,12 +65,14 @@ namespace QuantLib {
                           Rate convexityAdjustment = 0.0,
                           Futures::Type type = Futures::IMM);
         FuturesRateHelper(const Handle<Quote>& price,
+                          Natural fixingDays,
                           const Date& iborStartDate,
                           const Date& iborEndDate,
                           const DayCounter& dayCounter,
                           const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
                           Futures::Type type = Futures::IMM);
         FuturesRateHelper(Real price,
+                          Natural fixingDays,
                           const Date& iborStartDate,
                           const Date& endDate,
                           const DayCounter& dayCounter,
@@ -87,9 +88,10 @@ namespace QuantLib {
                           const boost::shared_ptr<IborIndex>& iborIndex,
                           Rate convexityAdjustment = 0.0,
                           Futures::Type type = Futures::IMM);
-        //! \name RateHelper interface
+        //! \name BootstrapHelper<ForwardRateCurve> interface
         //@{
         Real impliedQuote() const;
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name FuturesRateHelper inspectors
         //@{
@@ -100,13 +102,15 @@ namespace QuantLib {
         void accept(AcyclicVisitor&);
         //@}
       private:
-        Time yearFraction_;
+        Date fixingDate_;
+        boost::shared_ptr<IborIndex> iborIndex_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
         Handle<Quote> convAdj_;
     };
 
 
     //! Rate helper for bootstrapping over deposit rates
-    class DepositRateHelper : public RelativeDateRateHelper {
+    class DepositRateHelper : public RelativeDateBootstrapHelper<ForwardRateCurve> {
       public:
         DepositRateHelper(const Handle<Quote>& rate,
                           const Period& tenor,
@@ -126,10 +130,10 @@ namespace QuantLib {
                           const boost::shared_ptr<IborIndex>& iborIndex);
         DepositRateHelper(Rate rate,
                           const boost::shared_ptr<IborIndex>& iborIndex);
-        //! \name RateHelper interface
+        //! \name BootstrapHelper<ForwardRateCurve> interface
         //@{
         Real impliedQuote() const;
-        void setTermStructure(YieldTermStructure*);
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name Visitability
         //@{
@@ -139,12 +143,12 @@ namespace QuantLib {
         void initializeDates();
         Date fixingDate_;
         boost::shared_ptr<IborIndex> iborIndex_;
-        RelinkableHandle<YieldTermStructure> termStructureHandle_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
     };
 
 
     //! Rate helper for bootstrapping over %FRA rates
-    class FraRateHelper : public RelativeDateRateHelper {
+    class FraRateHelper : public RelativeDateBootstrapHelper<ForwardRateCurve> {
       public:
         FraRateHelper(const Handle<Quote>& rate,
                       Natural monthsToStart,
@@ -190,10 +194,10 @@ namespace QuantLib {
         FraRateHelper(Rate rate,
                       Period periodToStart,
                       const boost::shared_ptr<IborIndex>& iborIndex);
-        //! \name RateHelper interface
+        //! \name BootstrapHelper<ForwardRateCurve> interface
         //@{
         Real impliedQuote() const;
-        void setTermStructure(YieldTermStructure*);
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name Visitability
         //@{
@@ -204,12 +208,12 @@ namespace QuantLib {
         Date fixingDate_;
         Period periodToStart_;
         boost::shared_ptr<IborIndex> iborIndex_;
-        RelinkableHandle<YieldTermStructure> termStructureHandle_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
     };
 
     //! Rate helper for bootstrapping over swap rates
     /*! \todo use input SwapIndex to create the swap */
-    class SwapRateHelper : public RelativeDateRateHelper {
+    class SwapRateHelper : public RelativeDateBootstrapHelper<ForwardRateCurve> {
       public:
         SwapRateHelper(const Handle<Quote>& rate,
                        const boost::shared_ptr<SwapIndex>& swapIndex,
@@ -255,10 +259,10 @@ namespace QuantLib {
                        const Handle<YieldTermStructure>& discountingCurve
                                             = Handle<YieldTermStructure>(),
                        Natural settlementDays = Null<Natural>());
-        //! \name RateHelper interface
+        //! \name BootstrapHelper<ForwardRateCurve> interface
         //@{
         Real impliedQuote() const;
-        void setTermStructure(YieldTermStructure*);
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name SwapRateHelper inspectors
         //@{
@@ -280,7 +284,7 @@ namespace QuantLib {
         DayCounter fixedDayCount_;
         boost::shared_ptr<IborIndex> iborIndex_;
         boost::shared_ptr<VanillaSwap> swap_;
-        RelinkableHandle<YieldTermStructure> termStructureHandle_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
         Handle<Quote> spread_;
         Period fwdStart_;
         Handle<YieldTermStructure> discountHandle_;
@@ -288,7 +292,7 @@ namespace QuantLib {
     };
 
     //! Rate helper for bootstrapping over BMA swap rates
-    class BMASwapRateHelper : public RelativeDateRateHelper {
+    class BMASwapRateHelper : public RelativeDateBootstrapHelper<YieldTermStructure> {
       public:
         BMASwapRateHelper(const Handle<Quote>& liborFraction,
                           const Period& tenor, // swap maturity
@@ -301,7 +305,7 @@ namespace QuantLib {
                           const boost::shared_ptr<BMAIndex>& bmaIndex,
                           // ibor leg
                           const boost::shared_ptr<IborIndex>& index);
-        //! \name RateHelper interface
+        //! \name BootstrapHelper<YieldTermStructure> interface
         //@{
         Real impliedQuote() const;
         void setTermStructure(YieldTermStructure*);

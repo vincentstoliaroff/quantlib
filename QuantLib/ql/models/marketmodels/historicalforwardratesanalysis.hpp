@@ -70,7 +70,7 @@ namespace QuantLib {
         SavedSettings backup;
         Settings::instance().enforcesTodaysHistoricFixings() = true;
 
-        std::vector<boost::shared_ptr<RateHelper> > rateHelpers;
+        std::vector<boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > > rateHelpers;
 
         // Create DepositRateHelper
         std::vector<boost::shared_ptr<SimpleQuote> > iborQuotes;
@@ -79,7 +79,7 @@ namespace QuantLib {
             boost::shared_ptr<SimpleQuote> quote(new SimpleQuote);
             iborQuotes.push_back(quote);
             Handle<Quote> quoteHandle(quote);
-            rateHelpers.push_back(boost::shared_ptr<RateHelper> (new
+            rateHelpers.push_back(boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > (new
                 DepositRateHelper(quoteHandle,
                                   (*ibor)->tenor(),
                                   (*ibor)->fixingDays(),
@@ -96,7 +96,7 @@ namespace QuantLib {
             boost::shared_ptr<SimpleQuote> quote(new SimpleQuote);
             swapQuotes.push_back(quote);
             Handle<Quote> quoteHandle(quote);
-            rateHelpers.push_back(boost::shared_ptr<RateHelper> (new
+            rateHelpers.push_back(boost::shared_ptr<BootstrapHelper<ForwardRateCurve> > (new
                 SwapRateHelper(quoteHandle,
                                (*swap)->tenor(),
                                (*swap)->fixingCalendar(),

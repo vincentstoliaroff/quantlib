@@ -36,7 +36,7 @@ namespace QuantLib {
     //! Piecewise yield term structure
     /*! This term structure is bootstrapped on a number of interest
         rate instruments which are passed as a vector of handles to
-        RateHelper instances. Their maturities mark the boundaries of
+        BootstrapHelper instances. Their maturities mark the boundaries of
         the interpolated segments.
 
         Each segment is determined sequentially starting from the

@@ -51,6 +51,7 @@ using std::exp;
 using boost::shared_ptr;
 
 typedef PiecewiseYieldCurve<Discount,LogLinear> PiecewiseFlatForward;
+typedef BootstrapHelper<ForwardRateCurve> RateHelper;
 
 namespace {
 

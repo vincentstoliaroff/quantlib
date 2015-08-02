@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2009, 2012 Roland Lichters
- Copyright (C) 2009, 2012 Ferdinando Ametrano
+ Copyright (C) 2009, 2012, 2015 Ferdinando Ametrano
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -31,7 +31,7 @@
 namespace QuantLib {
 
     //! Rate helper for bootstrapping over Overnight Indexed Swap rates
-    class OISRateHelper : public RelativeDateRateHelper {
+    class OISRateHelper : public RelativeDateBootstrapHelper<ForwardRateCurve> {
       public:
         OISRateHelper(Natural settlementDays,
                       const Period& tenor, // swap maturity
@@ -43,7 +43,7 @@ namespace QuantLib {
         //! \name RateHelper interface
         //@{
         Real impliedQuote() const;
-        void setTermStructure(YieldTermStructure*);
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name inspectors
         //@{
@@ -61,14 +61,14 @@ namespace QuantLib {
         boost::shared_ptr<OvernightIndex> overnightIndex_;
 
         boost::shared_ptr<OvernightIndexedSwap> swap_;
-        RelinkableHandle<YieldTermStructure> termStructureHandle_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
 
         Handle<YieldTermStructure> discountHandle_;
         RelinkableHandle<YieldTermStructure> discountRelinkableHandle_;
     };
 
     //! Rate helper for bootstrapping over Overnight Indexed Swap rates
-    class DatedOISRateHelper : public RateHelper {
+    class DatedOISRateHelper : public BootstrapHelper<ForwardRateCurve> {
       public:
         DatedOISRateHelper(
                     const Date& startDate,
@@ -81,7 +81,7 @@ namespace QuantLib {
         //! \name RateHelper interface
         //@{
         Real impliedQuote() const;
-        void setTermStructure(YieldTermStructure*);
+        void setTermStructure(ForwardRateCurve*);
         //@}
         //! \name Visitability
         //@{
@@ -89,7 +89,7 @@ namespace QuantLib {
         //@}
     protected:
         boost::shared_ptr<OvernightIndexedSwap> swap_;
-        RelinkableHandle<YieldTermStructure> termStructureHandle_;
+        RelinkableHandle<ForwardRateCurve> termStructureHandle_;
 
         Handle<YieldTermStructure> discountHandle_;
         RelinkableHandle<YieldTermStructure> discountRelinkableHandle_;

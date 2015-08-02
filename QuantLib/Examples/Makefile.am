@@ -4,7 +4,6 @@ AM_CPPFLAGS = -I${top_srcdir} -I${top_builddir}
 SUBDIRS = \
     BasketLosses \
     BermudanSwaption \
-    Bonds \
     CallableBonds \
     CDS \
     ConvertibleBonds \

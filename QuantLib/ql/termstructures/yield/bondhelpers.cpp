@@ -25,6 +25,9 @@
 #include <ql/settings.hpp>
 #include <boost/make_shared.hpp>
 
+using boost::shared_ptr;
+using boost::dynamic_pointer_cast;
+
 namespace QuantLib {
 
     namespace {
@@ -32,10 +35,11 @@ namespace QuantLib {
     }
 
     BondHelper::BondHelper(const Handle<Quote>& price,
-                           const boost::shared_ptr<Bond>& bond,
+                           const shared_ptr<Bond>& bond,
                            const bool useCleanPrice)
-    : RateHelper(price), bond_(boost::make_shared<Bond>(*bond)) {
-
+    : BootstrapHelper<YieldTermStructure>(price),
+      bond_(boost::make_shared<Bond>(*bond))
+    {
         // the bond's last cashflow date, which can be later than
         // bond's maturity date because of adjustment
         latestDate_ = bond_->cashflows().back()->date();
@@ -51,7 +55,7 @@ namespace QuantLib {
         // do not set the relinkable handle as an observer -
         // force recalculation when needed
         termStructureHandle_.linkTo(
-                 boost::shared_ptr<YieldTermStructure>(t,no_deletion), false);
+                 shared_ptr<YieldTermStructure>(t,no_deletion), false);
 
         BootstrapHelper<YieldTermStructure>::setTermStructure(t);
     }
@@ -89,14 +93,15 @@ namespace QuantLib {
                                     bool exCouponEndOfMonth,
                                     const bool useCleanPrice)
     : BondHelper(price,
-                 boost::shared_ptr<Bond>(
-                     new FixedRateBond(settlementDays, faceAmount, schedule,
-                                       coupons, dayCounter, paymentConvention,
-                                       redemption, issueDate, paymentCalendar,
-                                       exCouponPeriod, exCouponCalendar,
-                                       exCouponConvention, exCouponEndOfMonth)),
-                 useCleanPrice) {
-        fixedRateBond_ = boost::dynamic_pointer_cast<FixedRateBond>(bond_);
+                 shared_ptr<Bond>(new
+                     FixedRateBond(settlementDays, faceAmount, schedule,
+                                   coupons, dayCounter, paymentConvention,
+                                   redemption, issueDate, paymentCalendar,
+                                   exCouponPeriod, exCouponCalendar,
+                                   exCouponConvention, exCouponEndOfMonth)),
+                 useCleanPrice)
+    {
+        fixedRateBond_ = dynamic_pointer_cast<FixedRateBond>(bond_);
     }
 
     void FixedRateBondHelper::accept(AcyclicVisitor& v) {
@@ -115,7 +120,7 @@ namespace QuantLib {
                             const bool growthOnly,
                             Real baseCPI,
                             const Period& observationLag,
-                            const boost::shared_ptr<ZeroInflationIndex>& cpiIndex,
+                            const shared_ptr<ZeroInflationIndex>& cpiIndex,
                             CPI::InterpolationType observationInterpolation,
                             const Schedule& schedule,
                             const std::vector<Rate>& fixedRate,
@@ -129,14 +134,15 @@ namespace QuantLib {
                             bool exCouponEndOfMonth,
                             const bool useCleanPrice)
     : BondHelper(price,
-                 boost::shared_ptr<Bond>(
-                     new CPIBond(settlementDays, faceAmount, growthOnly, baseCPI, 
-                                       observationLag, cpiIndex, observationInterpolation,
-                                       schedule, fixedRate, accrualDayCounter, paymentConvention,
-                                       issueDate, paymentCalendar, exCouponPeriod, exCouponCalendar,
-                                       exCouponConvention, exCouponEndOfMonth)),
-                 useCleanPrice) {
-        cpiBond_ = boost::dynamic_pointer_cast<CPIBond>(bond_);
+                 shared_ptr<Bond>(new
+                    CPIBond(settlementDays, faceAmount, growthOnly, baseCPI, 
+                            observationLag, cpiIndex, observationInterpolation,
+                            schedule, fixedRate, accrualDayCounter, paymentConvention,
+                            issueDate, paymentCalendar, exCouponPeriod, exCouponCalendar,
+                            exCouponConvention, exCouponEndOfMonth)),
+                 useCleanPrice)
+    {
+        cpiBond_ = dynamic_pointer_cast<CPIBond>(bond_);
     }
 
     void CPIBondHelper::accept(AcyclicVisitor& v) {

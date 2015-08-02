@@ -39,6 +39,8 @@ using namespace boost::unit_test_framework;
 
 namespace {
 
+    typedef BootstrapHelper<ForwardRateCurve> RateHelper;
+
     struct Datum {
         Integer n;
         TimeUnit units;
