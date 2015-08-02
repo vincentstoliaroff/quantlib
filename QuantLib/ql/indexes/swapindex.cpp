@@ -67,6 +67,10 @@ namespace QuantLib {
         registerWith(iborIndex_);
     }
 
+    Handle<ForwardRateCurve> SwapIndex::forwardingCurve() const {
+        return iborIndex_->forwardingCurve();
+    }
+
     Handle<YieldTermStructure> SwapIndex::forwardingTermStructure() const {
         return iborIndex_->forwardingTermStructure();
     }

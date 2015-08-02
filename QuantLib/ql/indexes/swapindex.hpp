@@ -67,6 +67,7 @@ namespace QuantLib {
         Period fixedLegTenor() const { return fixedLegTenor_; }
         BusinessDayConvention fixedLegConvention() const;
         boost::shared_ptr<IborIndex> iborIndex() const { return iborIndex_; }
+        Handle<ForwardRateCurve> forwardingCurve() const;
         Handle<YieldTermStructure> forwardingTermStructure() const;
         Handle<YieldTermStructure> discountingTermStructure() const;
         bool exogenousDiscount() const;

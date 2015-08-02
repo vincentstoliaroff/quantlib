@@ -32,12 +32,27 @@ namespace QuantLib {
                          BusinessDayConvention convention,
                          bool endOfMonth,
                          const DayCounter& dayCounter,
+                         const Handle<ForwardRateCurve>& h)
+    : InterestRateIndex(familyName, tenor, settlementDays, currency,
+                        fixingCalendar, dayCounter),
+      convention_(convention), forwardCurve_(h), endOfMonth_(endOfMonth) {
+        registerWith(forwardCurve_);
+    }
+
+    IborIndex::IborIndex(const std::string& familyName,
+                         const Period& tenor,
+                         Natural settlementDays,
+                         const Currency& currency,
+                         const Calendar& fixingCalendar,
+                         BusinessDayConvention convention,
+                         bool endOfMonth,
+                         const DayCounter& dayCounter,
                          const Handle<YieldTermStructure>& h)
     : InterestRateIndex(familyName, tenor, settlementDays, currency,
                         fixingCalendar, dayCounter),
-      convention_(convention), termStructure_(h), endOfMonth_(endOfMonth) {
-        registerWith(termStructure_);
-      }
+      convention_(convention), discountCurve_(h), endOfMonth_(endOfMonth) {
+        registerWith(discountCurve_);
+    }
 
     Rate IborIndex::forecastFixing(const Date& fixingDate) const {
         Date d1 = valueDate(fixingDate);
@@ -60,6 +75,20 @@ namespace QuantLib {
 
     boost::shared_ptr<IborIndex> IborIndex::clone(
                                const Handle<YieldTermStructure>& h) const {
+        return boost::shared_ptr<IborIndex>(
+                                        new IborIndex(familyName(),
+                                                      tenor(),
+                                                      fixingDays(),
+                                                      currency(),
+                                                      fixingCalendar(),
+                                                      businessDayConvention(),
+                                                      endOfMonth(),
+                                                      dayCounter(),
+                                                      h));
+    }
+
+    boost::shared_ptr<IborIndex> IborIndex::clone(
+                               const Handle<ForwardRateCurve>& h) const {
         return boost::shared_ptr<IborIndex>(
                                         new IborIndex(familyName(),
                                                       tenor(),

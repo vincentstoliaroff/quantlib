@@ -57,17 +57,23 @@ namespace QuantLib {
         Handle<YieldTermStructure> rateCurve =
                                             index_->forwardingTermStructure();
 
-        Date paymentDate = coupon.date();
-        if (paymentDate > rateCurve->referenceDate())
-            discount_ = rateCurve->discount(paymentDate);
-        else
-            discount_ = 1.0;
+        if (rateCurve.empty())
+            discount_ = Null<DiscountFactor>();
+        else {
+            Date paymentDate = coupon.date();
+            if (paymentDate > rateCurve->referenceDate())
+                discount_ = rateCurve->discount(paymentDate);
+            else
+                discount_ = 1.0;
+        }
 
         coupon_ = &coupon;
     }
 
     Real BlackIborCouponPricer::optionletPrice(Option::Type optionType,
                                                Real effStrike) const {
+        QL_REQUIRE(discount_ != Null<DiscountFactor>(),
+                   "no discount curve provided");
         return optionletRate(optionType, effStrike)*accrualPeriod_*discount_;
     }
 

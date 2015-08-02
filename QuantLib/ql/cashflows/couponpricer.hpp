@@ -152,6 +152,8 @@ namespace QuantLib {
     // inline
 
     inline Real BlackIborCouponPricer::swapletPrice() const {
+        QL_REQUIRE(discount_ != Null<DiscountFactor>(),
+                   "no discount curve provided");
         // past or future fixing is managed in InterestRateIndex::fixing()
         return swapletRate() * accrualPeriod_ * discount_;
     }

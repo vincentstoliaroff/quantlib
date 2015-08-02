@@ -42,8 +42,17 @@ namespace QuantLib {
                   BusinessDayConvention convention,
                   bool endOfMonth,
                   const DayCounter& dayCounter,
-                  const Handle<YieldTermStructure>& h =
-                                    Handle<YieldTermStructure>());
+                  const Handle<ForwardRateCurve>& h =
+                                    Handle<ForwardRateCurve>());
+        IborIndex(const std::string& familyName,
+                  const Period& tenor,
+                  Natural settlementDays,
+                  const Currency& currency,
+                  const Calendar& fixingCalendar,
+                  BusinessDayConvention convention,
+                  bool endOfMonth,
+                  const DayCounter& dayCounter,
+                  const Handle<YieldTermStructure>& h);
         //! \name InterestRateIndex interface
         //@{
         Date maturityDate(const Date& valueDate) const;
@@ -54,17 +63,21 @@ namespace QuantLib {
         BusinessDayConvention businessDayConvention() const;
         bool endOfMonth() const { return endOfMonth_; }
         //! the curve used to forecast fixings
+        Handle<ForwardRateCurve> forwardingCurve() const;
         Handle<YieldTermStructure> forwardingTermStructure() const;
         //@}
         //! \name Other methods
         //@{
         //! returns a copy of itself linked to a different forwarding curve
         virtual boost::shared_ptr<IborIndex> clone(
+                        const Handle<ForwardRateCurve>& forwarding) const;
+        virtual boost::shared_ptr<IborIndex> clone(
                         const Handle<YieldTermStructure>& forwarding) const;
         // @}
       protected:
         BusinessDayConvention convention_;
-        Handle<YieldTermStructure> termStructure_;
+        Handle<ForwardRateCurve> forwardCurve_;
+        Handle<YieldTermStructure> discountCurve_;
         bool endOfMonth_;
       private:
         // overload to avoid date/time (re)calculation
@@ -107,19 +120,28 @@ namespace QuantLib {
         return convention_;
     }
 
+    inline Handle<ForwardRateCurve>
+    IborIndex::forwardingCurve() const {
+        return forwardCurve_;
+    }
+
     inline Handle<YieldTermStructure>
     IborIndex::forwardingTermStructure() const {
-        return termStructure_;
+        return discountCurve_;
     }
 
     inline Rate IborIndex::forecastFixing(const Date& d1,
                                           const Date& d2,
                                           Time t) const {
-        QL_REQUIRE(!termStructure_.empty(),
-                   "null term structure set to this instance of " << name());
-        DiscountFactor disc1 = termStructure_->discount(d1);
-        DiscountFactor disc2 = termStructure_->discount(d2);
-        return (disc1/disc2 - 1.0) / t;
+        if (!forwardCurve_.empty()) {
+            return forwardCurve_->forwardRate(d1);
+        } else {
+            QL_REQUIRE(!discountCurve_.empty(),
+                       "null term structure set to this instance of " << name());
+            DiscountFactor disc1 = discountCurve_->discount(d1);
+            DiscountFactor disc2 = discountCurve_->discount(d2);
+            return (disc1/disc2 - 1.0) / t;
+        }
     }
 
 }
