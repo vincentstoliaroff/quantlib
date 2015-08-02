@@ -98,6 +98,8 @@ namespace QuantLib {
       protected:
         Real optionletPrice(Option::Type optionType,
                             Real effStrike) const;
+        Real optionletRate(Option::Type optionType,
+                           Real effStrike) const;
 
         virtual Rate adjustedFixing(Rate fixing = Null<Rate>()) const;
 
@@ -106,7 +108,6 @@ namespace QuantLib {
         Time accrualPeriod_;
         boost::shared_ptr<IborIndex> index_;
         Real discount_;
-        Real spreadLegValue_;
 
         const FloatingRateCoupon* coupon_;
     };
@@ -152,33 +153,29 @@ namespace QuantLib {
 
     inline Real BlackIborCouponPricer::swapletPrice() const {
         // past or future fixing is managed in InterestRateIndex::fixing()
-
-        Real swapletPrice = adjustedFixing() * accrualPeriod_ * discount_;
-        return gearing_ * swapletPrice + spreadLegValue_;
+        return swapletRate() * accrualPeriod_ * discount_;
     }
 
     inline Rate BlackIborCouponPricer::swapletRate() const {
-        return swapletPrice()/(accrualPeriod_*discount_);
+        return gearing_ * adjustedFixing() + spread_;
     }
 
     inline Real BlackIborCouponPricer::capletPrice(Rate effectiveCap) const {
-        Real capletPrice = optionletPrice(Option::Call, effectiveCap);
-        return gearing_ * capletPrice;
+        return gearing_ * optionletPrice(Option::Call, effectiveCap);
     }
 
     inline Rate BlackIborCouponPricer::capletRate(Rate effectiveCap) const {
-        return capletPrice(effectiveCap) / (accrualPeriod_*discount_);
+        return gearing_ * optionletRate(Option::Call, effectiveCap);
     }
 
     inline
     Real BlackIborCouponPricer::floorletPrice(Rate effectiveFloor) const {
-        Real floorletPrice = optionletPrice(Option::Put, effectiveFloor);
-        return gearing_ * floorletPrice;
+        return gearing_ * optionletPrice(Option::Put, effectiveFloor);
     }
 
     inline
     Rate BlackIborCouponPricer::floorletRate(Rate effectiveFloor) const {
-        return floorletPrice(effectiveFloor) / (accrualPeriod_*discount_);
+        return gearing_ * optionletRate(Option::Put, effectiveFloor);
     }
 
 }

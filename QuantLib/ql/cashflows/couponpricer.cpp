@@ -63,13 +63,16 @@ namespace QuantLib {
         else
             discount_ = 1.0;
 
-        spreadLegValue_ = spread_ * accrualPeriod_ * discount_;
-
         coupon_ = &coupon;
     }
 
     Real BlackIborCouponPricer::optionletPrice(Option::Type optionType,
                                                Real effStrike) const {
+        return optionletRate(optionType, effStrike)*accrualPeriod_*discount_;
+    }
+
+    Real BlackIborCouponPricer::optionletRate(Option::Type optionType,
+                                              Real effStrike) const {
         Date fixingDate = coupon_->fixingDate();
         if (fixingDate <= Settings::instance().evaluationDate()) {
             // the amount is determined
@@ -81,7 +84,7 @@ namespace QuantLib {
                 a = effStrike;
                 b = coupon_->indexFixing();
             }
-            return std::max(a - b, 0.0)* accrualPeriod_*discount_;
+            return std::max(a - b, 0.0);
         } else {
             // not yet determined, use Black model
             QL_REQUIRE(!capletVolatility().empty(),
@@ -93,7 +96,7 @@ namespace QuantLib {
                                        effStrike,
                                        adjustedFixing(),
                                        stdDev);
-            return fixing * accrualPeriod_ * discount_;
+            return fixing;
         }
     }
 
