@@ -49,7 +49,6 @@ class TenorBasis {
             OptimizationMethod& method,
             const EndCriteria& endCriteria 
                              = EndCriteria(1000, 100, 1.0e-8, 0.3e-4, 0.3e-4),
-            const Constraint& constraint = NoConstraint(),
             const std::vector<Real>& weights = std::vector<Real>(),
             const std::vector<bool>& fixParameters = std::vector<bool>());
 };
